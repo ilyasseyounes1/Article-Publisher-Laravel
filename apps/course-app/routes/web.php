@@ -9,16 +9,19 @@ Route::get('/', function () {
 });
 
 Route::get('/articles', [ArticleController::class, 'index'])
-    ->name('index');
-
-Route::get('/articles/{article}', [ArticleController::class, 'show'])
-    ->name('show');
+    ->name('articles.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/articles/create', [ArticleController::class, 'create'])
+        ->name('articles.create');
+
+    Route::post('/articles', [ArticleController::class, 'store'])
+        ->name('articles.store');
+
     Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 
@@ -28,5 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
 });
+
+Route::get('/articles/{article}', [ArticleController::class, 'show'])
+    ->name('articles.show');
 
 require __DIR__.'/auth.php';
